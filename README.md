@@ -53,7 +53,7 @@ Manage languages and add new language
 - Choose the newsletter channel and the notification
 - Write a new article and do not publish it by check "Publish item"
 - Save and close
-- In the news overview click on the publish icon
+- In the news overview click on the envelope icon
 - A message shows up saying "Newsletter sent successfully!"
 
 [1]: https://isotopeecommerce.org/de/handbuch/v/2.1/r/benachrichtigszentrum.html
