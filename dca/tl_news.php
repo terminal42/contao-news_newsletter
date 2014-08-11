@@ -10,15 +10,30 @@
  */
 
 /**
- * Replace the "toggle" button
+ * Add fields to tl_news
  */
-$GLOBALS['TL_DCA']['tl_news']['list']['operations']['toggle']['button_callback'] = array('tl_news_newsletter', 'toggleIcon');
+$GLOBALS['TL_DCA']['tl_news']['fields']['newsletter'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_news']['newsletter'],
+    'exclude'                 => true,
+    'sql'                     => "char(1) NOT NULL default ''"
+);
+
+/**
+ * Add the operation to tl_news
+ */
+$GLOBALS['TL_DCA']['tl_news']['list']['operations']['newsletter'] = array
+(
+    'label'               => &$GLOBALS['TL_LANG']['tl_news']['sendNewsletter'],
+    'icon'                => 'system/modules/news_newsletter/assets/newsletter.png',
+    'button_callback'     => array('tl_news_newsletter', 'newsletterIcon')
+);
 
 class tl_news_newsletter extends tl_news
 {
 
     /**
-     * Return the "toggle visibility" button
+     * Return the "newsletter" button
      * @param array
      * @param string
      * @param string
@@ -27,48 +42,36 @@ class tl_news_newsletter extends tl_news
      * @param string
      * @return string
      */
-    public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+    public function newsletterIcon($row, $href, $label, $title, $icon, $attributes)
     {
         $objArchive = \NewsArchiveModel::findByPk($row['pid']);
 
         if (!$objArchive->newsletter || !$objArchive->newsletter_channel || !$objArchive->nc_notification) {
-            return parent::toggleIcon($row, $href, $label, $title, $icon, $attributes);
+            return '';
         }
 
         // Toggle the record
-        if (strlen(Input::get('tid')))
+        if (Input::get('newsletter'))
         {
-            $this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1));
-
-            // Send the message
-            if ((Input::get('state') == 1)) {
-                 if ($this->sendNewsMessage(Input::get('tid'))) {
-                     Message::addConfirmation($GLOBALS['TL_LANG']['tl_news']['message_news_newsletter_confirm']);
-                 } else {
-                     Message::addError($GLOBALS['TL_LANG']['tl_news']['message_news_newsletter_error']);
-                 }
-            }
+             if ($this->sendNewsMessage(Input::get('newsletter'))) {
+                 Message::addConfirmation($GLOBALS['TL_LANG']['tl_news']['message_news_newsletter_confirm']);
+             } else {
+                 Message::addError($GLOBALS['TL_LANG']['tl_news']['message_news_newsletter_error']);
+             }
 
             $this->redirect($this->getReferer());
         }
 
-        // Check permissions AFTER checking the tid, so hacking attempts are logged
-        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_news::published', 'alexf'))
-        {
-            return '';
+        // Return just an image if newsletter was sent
+        if ($row['newsletter']) {
+            return Image::getHtml(str_replace('.png', '_.png', $icon), $label);
         }
 
-        $href .= '&amp;tid='.$row['id'].'&amp;state='.($row['published'] ? '' : 1);
+        // Add the confirmation popup
+        $intRecipients = \NewsletterRecipientsModel::countByPid($objArchive->newsletter_channel);
+        $attributes = 'onclick="if(!confirm(\'' . sprintf($GLOBALS['TL_LANG']['tl_news']['sendNewsletterConfirm'], $intRecipients) . '\'))return false;Backend.getScrollOffset()"';
 
-        if (!$row['published'])
-        {
-            $icon = 'invisible.gif';
-        }
-
-        // Remove the AJAX toggle
-        $attributes = 'onclick="Backend.getScrollOffset();"';
-
-        return '<a href="'.$this->addToUrl($href).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
+        return '<a href="'.$this->addToUrl($href . '&newsletter=' . $row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
     }
 
     /**
@@ -135,6 +138,10 @@ class tl_news_newsletter extends tl_news
             $arrTokens['recipient_email'] = $objRecipients->email;
             $objNotification->send($arrTokens);
         }
+
+        // Set the newsletter flag
+        $objNews->newsletter = 1;
+        $objNews->save();
 
         return true;
     }
