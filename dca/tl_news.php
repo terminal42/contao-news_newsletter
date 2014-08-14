@@ -68,7 +68,7 @@ class tl_news_newsletter extends tl_news
         }
 
         // Add the confirmation popup
-        $intRecipients = \NewsletterRecipientsModel::countByPid($objArchive->newsletter_channel);
+        $intRecipients = \NewsletterRecipientsModel::countBy(array("pid=? AND active=1"), $objArchive->newsletter_channel);
         $attributes = 'onclick="if(!confirm(\'' . sprintf($GLOBALS['TL_LANG']['tl_news']['sendNewsletterConfirm'], $intRecipients) . '\'))return false;Backend.getScrollOffset()"';
 
         return '<a href="'.$this->addToUrl($href . '&newsletter=' . $row['id']).'" title="'.specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
@@ -99,7 +99,7 @@ class tl_news_newsletter extends tl_news
             return false;
         }
 
-        $objRecipients = \NewsletterRecipientsModel::findByPid($objArchive->newsletter_channel);
+        $objRecipients = \NewsletterRecipientsModel::findBy(array("t.pid=? AND active=1"), $objArchive->newsletter_channel);
 
         if ($objRecipients === null) {
             return false;
