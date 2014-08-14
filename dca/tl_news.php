@@ -99,7 +99,7 @@ class tl_news_newsletter extends tl_news
             return false;
         }
 
-        $objRecipients = \NewsletterRecipientsModel::findBy(array("t.pid=? AND active=1"), $objArchive->newsletter_channel);
+        $objRecipients = \NewsletterRecipientsModel::findBy(array("pid=? AND active=1"), $objArchive->newsletter_channel);
 
         if ($objRecipients === null) {
             return false;
