@@ -16,6 +16,7 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['newsletter'] = array
 (
     'label'                   => &$GLOBALS['TL_LANG']['tl_news']['newsletter'],
     'exclude'                 => true,
+    'eval'                    => array('doNotCopy'=>true),
     'sql'                     => "char(1) NOT NULL default ''"
 );
 
