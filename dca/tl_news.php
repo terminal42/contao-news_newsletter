@@ -130,7 +130,7 @@ class tl_news_newsletter extends tl_news
 
         // Generate news URL
         $objPage = \PageModel::findWithDetails($objNews->getRelated('pid')->jumpTo);
-        $arrTokens['news_url'] = ($objPage->rootUseSSL ? 'https://' : 'http://') . ($objPage->domain ?: \Environment::get('host')) . TL_PATH . '/' . $objPage->getFrontendUrl((($GLOBALS['TL_CONFIG']['useAutoItem'] && !$GLOBALS['TL_CONFIG']['disableAlias']) ?  '/' : '/items/') . ((!$GLOBALS['TL_CONFIG']['disableAlias'] && $objNews->alias != '') ? $objNews->alias : $objNews->id));
+        $arrTokens['news_url'] = ($objPage->rootUseSSL ? 'https://' : 'http://') . ($objPage->domain ?: \Environment::get('host')) . TL_PATH . '/' . $objPage->getFrontendUrl((($GLOBALS['TL_CONFIG']['useAutoItem'] && !$GLOBALS['TL_CONFIG']['disableAlias']) ?  '/' : '/items/') . ((!$GLOBALS['TL_CONFIG']['disableAlias'] && $objNews->alias != '') ? $objNews->alias : $objNews->id), $objPage->language);
 
         // Administrator e-mail
         $arrTokens['admin_email'] = $GLOBALS['TL_ADMIN_EMAIL'];
