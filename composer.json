@@ -1,0 +1,27 @@
+{
+    "name": "terminal42/contao-news_newsletter",
+    "description": "Allows you to send your news as a newsletter using the Notification Center.",
+    "keywords": ["contao", "news", "newsletter"],
+    "type": "contao-module",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "terminal42 gmbh",
+            "homepage": "https://www.terminal42.ch"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "contao/core-bundle": "~3.5 || ^4.1",
+        "contao-community-alliance/composer-plugin": "~2.0 || 3.*",
+        "codefog/contao-haste": "4.11.4",
+        "terminal42/notification_center": "^1.3.5"
+    },
+    "extra":{
+        "contao": {
+            "sources": {
+                "": "system/modules/news_newsletter"
+            }
+        }
+    }
+}
