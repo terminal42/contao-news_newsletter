@@ -35,8 +35,10 @@ class SendNotificationMessageListener
 
             if (Validator::isBinaryUuid($token)) {
                 $fileModel = FilesModel::findByUuid($token);
-                $arrTokens[$key] = $fileModel->path;
-                continue;
+                if ($fileModel) {
+                    $arrTokens[$key] = $fileModel->path;
+                    continue;
+                }
             }
 
             if (false === json_encode($token)) {
