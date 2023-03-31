@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Terminal42\NewsNewsletterBundle\EventListener;
 
+use Codefog\HasteBundle\Formatter;
 use Contao\Backend;
+use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
@@ -12,6 +14,7 @@ use Contao\Image;
 use Contao\Input;
 use Contao\Message;
 use Contao\NewsArchiveModel;
+use Contao\NewsletterRecipientsModel;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -49,7 +52,7 @@ class SendNewsletterListener
         }
 
         // Add the confirmation popup
-        $intRecipients = \NewsletterRecipientsModel::countBy(["pid=? AND active='1'"], $archive->newsletter_channel);
+        $intRecipients = NewsletterRecipientsModel::countBy(["pid=? AND active='1'"], $archive->newsletter_channel);
         $attributes = 'onclick="if(!confirm(\''.sprintf($GLOBALS['TL_LANG']['tl_news']['sendNewsletterConfirm'], $intRecipients).'\'))return false;Backend.getScrollOffset()"';
 
         return '<a href="'.Backend::addToUrl($href.'&newsletter='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
@@ -75,7 +78,7 @@ class SendNewsletterListener
             return false;
         }
 
-        $objRecipients = \NewsletterRecipientsModel::findBy(['pid=? AND active=1'], $objArchive->newsletter_channel);
+        $objRecipients = NewsletterRecipientsModel::findBy(['pid=? AND active=1'], $objArchive->newsletter_channel);
 
         if (null === $objRecipients) {
             return false;
@@ -85,16 +88,24 @@ class SendNewsletterListener
 
         // Generate news archive tokens
         foreach ($objArchive->row() as $k => $v) {
-            $arrTokens['news_archive_'.$k] = Format::dcaValue('tl_news_archive', $k, $v);
+            if (class_exists(Format::class)) {
+                $arrTokens['news_archive_'.$k] = Format::dcaValue('tl_news_archive', $k, $v);
+            } else {
+                System::getContainer()->get(Formatter::class)->dcaValue('tl_news_archive', $k, $v);
+            }
         }
 
         // Generate news tokens
         foreach ($objNews->row() as $k => $v) {
-            $arrTokens['news_'.$k] = Format::dcaValue('tl_news', $k, $v);
+            if (class_exists(Format::class)) {
+                $arrTokens['news_'.$k] = Format::dcaValue('tl_news', $k, $v);
+            } else {
+                System::getContainer()->get(Formatter::class)->dcaValue('tl_news', $k, $v);
+            }
         }
 
         $arrTokens['news_text'] = '';
-        $objElement = \ContentModel::findPublishedByPidAndTable($objNews->id, 'tl_news');
+        $objElement = ContentModel::findPublishedByPidAndTable($objNews->id, 'tl_news');
 
         // Generate news text
         if (null !== $objElement) {
@@ -105,7 +116,7 @@ class SendNewsletterListener
 
         // Generate news URL
         if (null !== ($objPage = PageModel::findWithDetails($objNews->getRelated('pid')->jumpTo))) {
-            $arrTokens['news_url'] = $objPage->getAbsoluteUrl((($GLOBALS['TL_CONFIG']['useAutoItem']) ? '/' : '/items/').($objNews->alias ?: $objNews->id));
+            $arrTokens['news_url'] = $objPage->getAbsoluteUrl(($GLOBALS['TL_CONFIG']['useAutoItem'] ? '/' : '/items/').($objNews->alias ?: $objNews->id));
         }
 
         // Administrator e-mail
