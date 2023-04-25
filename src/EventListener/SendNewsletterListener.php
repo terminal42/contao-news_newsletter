@@ -91,7 +91,7 @@ class SendNewsletterListener
             if (class_exists(Format::class)) {
                 $arrTokens['news_archive_'.$k] = Format::dcaValue('tl_news_archive', $k, $v);
             } else {
-                System::getContainer()->get(Formatter::class)->dcaValue('tl_news_archive', $k, $v);
+                $arrTokens['news_archive_'.$k] = System::getContainer()->get(Formatter::class)->dcaValue('tl_news_archive', $k, $v);
             }
         }
 
@@ -100,7 +100,7 @@ class SendNewsletterListener
             if (class_exists(Format::class)) {
                 $arrTokens['news_'.$k] = Format::dcaValue('tl_news', $k, $v);
             } else {
-                System::getContainer()->get(Formatter::class)->dcaValue('tl_news', $k, $v);
+                $arrTokens['news_'.$k] = System::getContainer()->get(Formatter::class)->dcaValue('tl_news', $k, $v);
             }
         }
 
