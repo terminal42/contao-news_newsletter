@@ -31,7 +31,11 @@
         "contao/news-bundle": "^4.13 || ^5.0",
         "contao/newsletter-bundle": "^4.13 || ^5.0",
         "codefog/contao-haste": "^5.0",
-        "terminal42/notification_center": "^2.0"
+        "terminal42/notification_center": "^2.0",
+        "doctrine/dbal": "^3.0",
+        "symfony/config": "^5 || ^6 || ^7",
+        "symfony/dependency-injection": "^5 || ^6 || ^7",
+        "symfony/http-kernel": "^5 || ^6 || ^7"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
@@ -47,5 +51,13 @@
     },
     "extra": {
         "contao-manager-plugin": "Terminal42\\NewsNewsletterBundle\\ContaoManager\\Plugin"
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": false,
+            "php-http/discovery": false,
+            "contao/manager-plugin": false,
+            "terminal42/contao-build-tools": true
+        }
     }
 }

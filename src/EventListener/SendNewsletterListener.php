@@ -32,14 +32,15 @@ class SendNewsletterListener
     }
 
     /**
-     * @param string|null $href
-     * @param string|null $label
-     * @param string|null $title
-     * @param string|null $icon
+     * @param array<string, string|int> $row
+     * @param string|null               $href
+     * @param string|null               $label
+     * @param string|null               $title
+     * @param string|null               $icon
      */
     public function __invoke(array $row, $href, $label, $title, $icon): string
     {
-        $archive = NewsArchiveModel::findByPk($row['pid']);
+        $archive = NewsArchiveModel::findById($row['pid']);
 
         if (null === $archive || !$archive->newsletter || !$archive->newsletter_channel || !$archive->nc_notification) {
             return '';
@@ -63,14 +64,14 @@ class SendNewsletterListener
 
         // Add the confirmation popup
         $intRecipients = NewsletterRecipientsModel::countBy(["pid=? AND active='1'"], $archive->newsletter_channel);
-        $attributes = 'onclick="if(!confirm(\''.sprintf($GLOBALS['TL_LANG']['tl_news']['sendNewsletterConfirm'], $intRecipients).'\'))return false;Backend.getScrollOffset()"';
+        $attributes = 'onclick="if(!confirm(\''.\sprintf($GLOBALS['TL_LANG']['tl_news']['sendNewsletterConfirm'], $intRecipients).'\'))return false;Backend.getScrollOffset()"';
 
         return '<a href="'.Backend::addToUrl($href.'&newsletter='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label).'</a> ';
     }
 
     private function sendNewsMessage(int $newsletterId): bool
     {
-        $news = NewsModel::findByPk($newsletterId);
+        $news = NewsModel::findById($newsletterId);
 
         if (null === $news) {
             return false;

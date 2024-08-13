@@ -15,6 +15,9 @@ class NotificationOptionsListener
     {
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function __invoke(): array
     {
         return $this->notificationCenter->getNotificationsForNotificationType(NewsNewsletterNotificationType::NAME);
