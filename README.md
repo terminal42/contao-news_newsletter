@@ -7,7 +7,7 @@ You want to send a newsletter every single time a news will be published? Here y
 
 ### Requirements
 
-1. (notification_center)[https://github.com/terminal42/contao-notification_center] installed
+1. (notification_center)[https://extensions.contao.org/?p=terminal42%2Fnotification_center] installed
 2. News module enabled
 3. Newsletter module enabled
 
@@ -56,4 +56,4 @@ Manage languages and add new language
 - In the news overview click on the envelope icon
 - A message shows up saying "Newsletter sent successfully!"
 
-[1]: https://isotopeecommerce.org/de/handbuch/v/2.1/r/benachrichtigszentrum.html
+[1]: https://extensions.terminal42.ch/docs/notification-center/
