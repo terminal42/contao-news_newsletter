@@ -34,6 +34,7 @@ New message
 Manage languages and add new language
 - Select a language and activate "Fallback"
 - Simple Tokens:
+ - ##recipient_email##
  - ##news_*##
  - ##news_archive_*##
  - ##news_headline##
