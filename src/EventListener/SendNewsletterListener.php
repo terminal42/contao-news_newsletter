@@ -93,12 +93,12 @@ class SendNewsletterListener
 
         // Generate news archive tokens
         foreach ($newsArchive->row() as $k => $v) {
-            $tokens['news_archive_'.$k] = $this->formatter->dcaValue('tl_news_archive', $k, $v);
+            $tokens['news_archive_'.$k] = StringUtil::decodeEntities($this->formatter->dcaValue('tl_news_archive', $k, $v));
         }
 
         // Generate news tokens
         foreach ($news->row() as $k => $v) {
-            $tokens['news_'.$k] = $this->formatter->dcaValue('tl_news', $k, $v);
+            $tokens['news_'.$k] = StringUtil::decodeEntities($this->formatter->dcaValue('tl_news', $k, $v));
         }
 
         $tokens['news_text'] = '';
