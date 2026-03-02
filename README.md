@@ -52,7 +52,7 @@ Manage languages and add new language
 
 - Add news archive and enable newsletter in the setting
 - Choose the newsletter channel and the notification
-- Write a new article and do not publish it by check "Publish item"
+- Write a news article and publish it
 - Save and close
 - In the news overview click on the envelope icon
 - A message shows up saying "Newsletter sent successfully!"
