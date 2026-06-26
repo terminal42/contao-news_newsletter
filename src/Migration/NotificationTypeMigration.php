@@ -18,7 +18,7 @@ class NotificationTypeMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        if (!$schemaManager->tablesExist('tl_nc_notification')) {
+        if (!$schemaManager->tablesExist(['tl_nc_notification'])) {
             return false;
         }
 
